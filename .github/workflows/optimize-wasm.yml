@@ -42,7 +42,7 @@ jobs:
             cosmwasm/workspace-optimizer:0.12.13
 
       - name: Upload optimized wasm artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: optimized-wasm
           path: cosmos-contracts/artifacts/*.wasm 
