@@ -26,6 +26,8 @@ jobs:
         run: |
           docker pull cosmwasm/workspace-optimizer:0.12.13
 
+      - name: Install cargo-wasm
+        run: cargo install cargo-wasm --locked
       - name: Build CosmWasm Contracts
         working-directory: ./cosmos-contracts
         run: |
