@@ -1,4 +1,4 @@
-name: Optimize CosmWasm Contracts
+name: Build CosmWasm Contracts for Juno
 
 on:
   workflow_dispatch:
@@ -9,7 +9,7 @@ on:
       - '.github/workflows/optimize-wasm.yml'
 
 jobs:
-  build-optimize:
+  build-juno:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -22,12 +22,9 @@ jobs:
           target: wasm32-unknown-unknown
           override: true
 
-      - name: Install workspace optimizer
-        run: |
-          docker pull cosmwasm/workspace-optimizer:0.12.13
-
       - name: Install cargo-wasm
         run: cargo install cargo-wasm --locked
+
       - name: Build CosmWasm Contracts
         working-directory: ./cosmos-contracts
         run: |
@@ -36,18 +33,16 @@ jobs:
             (cd $pkg && cargo wasm)
           done
 
-      - name: Optimize contracts
+      - name: Collect wasm artifacts
+        working-directory: ./cosmos-contracts
         run: |
-          cd cosmos-contracts
-          docker run --rm \
-            -v "$(pwd)":/code \
-            -v "$(pwd)/target/wasm32-unknown-unknown/release":/code/target/wasm32-unknown-unknown/release \
-            --mount type=volume,source="cosmos-contracts_cache",target=/code/target \
-            --mount type=volume,source=registry_cache,target=/usr/local/cargo/registry \
-            cosmwasm/workspace-optimizer:0.12.13
+          mkdir -p artifacts
+          find . -name "*.wasm" -exec cp {} artifacts/ \;
+          echo "Available artifacts:"
+          ls -la artifacts/
 
-      - name: Upload optimized wasm artifacts
+      - name: Upload wasm artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: optimized-wasm
+          name: juno-wasm-artifacts
           path: cosmos-contracts/artifacts/*.wasm 
