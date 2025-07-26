@@ -26,10 +26,13 @@ jobs:
         run: |
           docker pull cosmwasm/workspace-optimizer:0.12.13
 
-      - name: Build contracts
+      - name: Build CosmWasm Contracts
+        working-directory: ./cosmos-contracts
         run: |
-          cd cosmos-contracts
-          cargo build --target wasm32-unknown-unknown --release
+          cargo install cargo-wasm --locked || true
+          cargo wasm --package escrow
+          cargo wasm --package resolver
+          cargo wasm --package simple-test
 
       - name: Optimize contracts
         run: |
