@@ -1,0 +1,11 @@
+[workspace]
+members = [
+    "escrow",
+    "resolver", 
+    "simple-test"
+]
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1 

@@ -1,0 +1,30 @@
+[package]
+name = "cosmos-resolver"
+version = "0.1.0"
+edition = "2021"
+
+[features]
+library = []
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+cosmwasm-schema = "1.1"
+cosmwasm-std = "1.1"
+cosmwasm-storage = "1.1"
+cw-storage-plus = "0.10"
+cw2 = "0.10"
+schemars = "0.8"
+serde = { version = "1.0", default-features = false, features = ["derive"] }
+thiserror = "1.0"
+sha2 = "0.10"
+
+[dev-dependencies]
+anyhow = "1.0"
+cw-multi-test = "0.17" 

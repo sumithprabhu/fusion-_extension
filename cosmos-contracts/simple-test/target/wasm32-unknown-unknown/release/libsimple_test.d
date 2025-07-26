@@ -1,0 +1,1 @@
+/Users/sumith/Personal/Projects/cross-chain-resolver-example/cosmos-contracts/simple-test/target/wasm32-unknown-unknown/release/libsimple_test.rlib: /Users/sumith/Personal/Projects/cross-chain-resolver-example/cosmos-contracts/simple-test/src/lib.rs
