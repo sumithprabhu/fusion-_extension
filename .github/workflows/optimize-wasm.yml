@@ -29,10 +29,10 @@ jobs:
       - name: Build CosmWasm Contracts
         working-directory: ./cosmos-contracts
         run: |
-          cargo install cargo-wasm --locked || true
-          cargo wasm --package escrow
-          cargo wasm --package resolver
-          cargo wasm --package simple-test
+          for pkg in escrow resolver simple-test; do
+            echo "Building $pkg..."
+            (cd $pkg && cargo wasm)
+          done
 
       - name: Optimize contracts
         run: |
