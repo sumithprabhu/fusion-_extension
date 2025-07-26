@@ -28,15 +28,8 @@ jobs:
 
       - name: Build contracts
         run: |
-          cd cosmos-contracts/escrow && cargo build --target wasm32-unknown-unknown --release
-          cd ../resolver && cargo build --target wasm32-unknown-unknown --release
-          cd ../simple-test && cargo build --target wasm32-unknown-unknown --release
-      - name: Collect all wasm files
-        run: |
-          mkdir -p cosmos-contracts/target/wasm32-unknown-unknown/release/
-          cp cosmos-contracts/escrow/target/wasm32-unknown-unknown/release/*.wasm cosmos-contracts/target/wasm32-unknown-unknown/release/ || true
-          cp cosmos-contracts/resolver/target/wasm32-unknown-unknown/release/*.wasm cosmos-contracts/target/wasm32-unknown-unknown/release/ || true
-          cp cosmos-contracts/simple-test/target/wasm32-unknown-unknown/release/*.wasm cosmos-contracts/target/wasm32-unknown-unknown/release/ || true
+          cd cosmos-contracts
+          cargo build --target wasm32-unknown-unknown --release
 
       - name: Optimize contracts
         run: |
