@@ -1,0 +1,48 @@
+name: Optimize CosmWasm Contracts
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ master ]
+    paths:
+      - 'cosmos-contracts/**'
+      - '.github/workflows/optimize-wasm.yml'
+
+jobs:
+  build-optimize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: wasm32-unknown-unknown
+          override: true
+
+      - name: Install workspace optimizer
+        run: |
+          docker pull cosmwasm/workspace-optimizer:0.12.13
+
+      - name: Build contracts
+        run: |
+          cd cosmos-contracts
+          cargo build --target wasm32-unknown-unknown --release
+
+      - name: Optimize contracts
+        run: |
+          cd cosmos-contracts
+          docker run --rm \
+            -v "$(pwd)":/code \
+            -v "$(pwd)/target/wasm32-unknown-unknown/release":/code/target/wasm32-unknown-unknown/release \
+            --mount type=volume,source="cosmos-contracts_cache",target=/code/target \
+            --mount type=volume,source=registry_cache,target=/usr/local/cargo/registry \
+            cosmwasm/workspace-optimizer:0.12.13
+
+      - name: Upload optimized wasm artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: optimized-wasm
+          path: cosmos-contracts/artifacts/*.wasm 
